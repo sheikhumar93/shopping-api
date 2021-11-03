@@ -14,11 +14,9 @@ These are the notes from a meeting with the frontend developer that describe wha
 - [OPTIONAL] Top 5 most popular products '/products?limit=5&sort=-sales' [GET]
 - [OPTIONAL] Products by category (args: product category) '/products?category="category_name"' [GET]
 
-Products (id: number, name: varchar, price: number, category_id: number[foreign key to categories table])
+Products (id: number, name: varchar, price: number, sales: number, category_id: number[foreign key to categories table])
 
 Categories (id: number, name: varchar)
-
-Sales (id: number, product_id: number[foreign key to products table], sales)
 
 #### Users
 
@@ -26,14 +24,16 @@ Sales (id: number, product_id: number[foreign key to products table], sales)
 - Show [token required] '/users/:id' [GET]
 - Create New [token required] '/users' [POST]
 
-Users (id: number, firstName: varchar, lastName: varchar, password_digest: varchar)
+Users (id: number, first_name: varchar, last_name: varchar, password_digest: varchar)
 
 #### Orders
 
 - Current Order by user (args: user id)[token required]
 - [OPTIONAL] Completed Orders by user (args: user id)[token required]
 
-Orders (id: number, )
+Orders (id: number, user_id: number[foreign key to users table], order_complete: boolean)
+
+Order_Items(id: number, order_id: number[foreign key to orders table], product_id: number[foreign key to products table], quantity: number, price: number)
 
 ## Data Shapes
 
