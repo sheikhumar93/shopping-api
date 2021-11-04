@@ -35,7 +35,7 @@ export class OrderStore {
     try {
       // when order is created order_complete can never be true
       // so make it a column with a default value of false
-      // and do not insert value in this function
+      // and do not insert value in this function over here
       const sql =
         'INSERT INTO orders (user_id, order_complete) VALUES ($1, $2) RETURNING *';
       const conn = await client.connect();

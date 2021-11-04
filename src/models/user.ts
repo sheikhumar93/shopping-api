@@ -2,12 +2,12 @@ import client from '../database';
 
 export type User = {
   id?: number;
-  first_name: string;
-  last_name: string;
-  password_digest: string;
+  firstName: string;
+  lastName: string;
+  passwordDigest: string;
 };
 
-export class OrderStore {
+export class UserStore {
   async index(): Promise<User[]> {
     try {
       const sql = 'SELECT * FROM users';
@@ -39,9 +39,9 @@ export class OrderStore {
       const conn = await client.connect();
       // do not insert the password digest directly
       const result = await conn.query(sql, [
-        u.first_name,
-        u.last_name,
-        u.password_digest
+        u.firstName,
+        u.lastName,
+        u.passwordDigest
       ]);
       conn.release();
       return result.rows[0];
