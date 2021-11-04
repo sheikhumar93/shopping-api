@@ -1,10 +1,13 @@
 import client from '../database';
+import bcrypt from 'bcrypt';
+
+const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export type User = {
   id?: number;
   firstName: string;
   lastName: string;
-  passwordDigest: string;
+  password: string;
 };
 
 export class UserStore {
@@ -37,16 +40,33 @@ export class UserStore {
       const sql =
         'INSERT INTO users (first_name, last_name, password_digest) VALUES ($1, $2, $3) RETURNING *';
       const conn = await client.connect();
-      // do not insert the password digest directly
-      const result = await conn.query(sql, [
-        u.firstName,
-        u.lastName,
-        u.passwordDigest
-      ]);
+      const hash = bcrypt.hashSync(
+        u.password + BCRYPT_PASSWORD,
+        parseInt(SALT_ROUNDS!)
+      );
+      const result = await conn.query(sql, [u.firstName, u.lastName, hash]);
       conn.release();
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Cannot create order ${u}.\n${err}`);
+      throw new Error(`Cannot create user ${u}.\n${err}`);
     }
+  }
+
+  async authenticate(
+    firstName: string,
+    password: string
+  ): Promise<User | null> {
+    const sql = 'SELECT * FROM users WHERE first_name=($1)';
+    const conn = await client.connect();
+    const result = await conn.query(sql, [firstName]);
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      if (
+        bcrypt.compareSync(password + BCRYPT_PASSWORD, user.password_digest)
+      ) {
+        return user;
+      }
+    }
+    return null;
   }
 }

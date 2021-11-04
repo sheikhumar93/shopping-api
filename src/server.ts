@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+
 import category_routes from './handlers/categories';
 import product_routes from './handlers/products';
 import user_routes from './handlers/users';
