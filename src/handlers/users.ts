@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import { User, UserStore } from '../models/user';
 
@@ -54,15 +54,19 @@ const authenticate = async (req: Request, res: Response) => {
   }
 };
 
-const verifyAuthToken = (
+export const verifyAuthToken = (
   req: Request,
   res: Response,
   next: express.NextFunction
 ) => {
   try {
+    const id = parseInt(req.params.id as string);
     const authorizationHeader = req.headers.authorization;
     const token = authorizationHeader!.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRET!);
+    const decoded = jwt.verify(token, process.env.TOKEN_SECRET!) as JwtPayload;
+    if (decoded.id !== id) {
+      throw new Error('User id does not match');
+    }
     next();
   } catch (err) {
     res.status(401).json(err);
@@ -70,8 +74,8 @@ const verifyAuthToken = (
 };
 
 const user_routes = (app: express.Application) => {
-  app.get('/users', index);
-  app.get('/users/:id', show);
+  app.get('/users', verifyAuthToken, index); // available for admin users only
+  app.get('/users/:id', verifyAuthToken, show);
   app.post(
     '/users',
     body('firstName').isString(),
