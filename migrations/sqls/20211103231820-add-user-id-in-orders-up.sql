@@ -1,2 +1,2 @@
 ALTER TABLE orders 
-ADD COLUMN user_id BIGINT REFERENCES users(id);
+ADD COLUMN user_id INTEGER REFERENCES users(id);

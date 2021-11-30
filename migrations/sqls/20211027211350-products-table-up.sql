@@ -3,5 +3,5 @@ CREATE TABLE products (
     name VARCHAR(255) NOT NULL,
     price INTEGER NOT NULL,
     sales INTEGER DEFAULT 0,
-    category_id BIGINT REFERENCES categories(id)
+    category_id INTEGER REFERENCES categories(id)
 );

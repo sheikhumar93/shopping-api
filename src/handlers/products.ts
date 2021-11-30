@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { Product, ProductStore } from '../models/product';
+import { verifyAuthToken } from './users';
 
 const store = new ProductStore();
 
@@ -21,11 +22,11 @@ const create = async (req: Request, res: Response) => {
   try {
     const name = req.body.name as string;
     const price = parseInt(req.body.price as string);
-    const category_id = parseInt(req.body.category_id as string);
+    const categoryId = parseInt(req.body.categoryId as string);
     const product: Product = {
       name,
       price,
-      category_id
+      category_id: categoryId
     };
     const newProduct = await store.create(product);
     res.json(newProduct);
@@ -38,7 +39,7 @@ const create = async (req: Request, res: Response) => {
 const product_routes = (app: express.Application) => {
   app.get('/products', index);
   app.get('/products/:id', show);
-  app.post('/products', create);
+  app.post('/products', verifyAuthToken, create);
 };
 
 export default product_routes;

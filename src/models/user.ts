@@ -5,8 +5,8 @@ const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export type User = {
   id?: number;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   password: string;
 };
 
@@ -44,7 +44,7 @@ export class UserStore {
         u.password + BCRYPT_PASSWORD,
         parseInt(SALT_ROUNDS!)
       );
-      const result = await conn.query(sql, [u.firstName, u.lastName, hash]);
+      const result = await conn.query(sql, [u.first_name, u.last_name, hash]);
       conn.release();
       return result.rows[0];
     } catch (err) {

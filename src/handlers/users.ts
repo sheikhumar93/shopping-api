@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { decode, JwtPayload } from 'jsonwebtoken';
 
 import { User, UserStore } from '../models/user';
 
@@ -69,7 +69,9 @@ export const verifyAuthToken = (
     }
     next();
   } catch (err) {
-    res.status(401).json(err);
+    console.log(err);
+    res.status(401);
+    res.json(err);
   }
 };
 

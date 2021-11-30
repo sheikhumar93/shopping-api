@@ -4,6 +4,7 @@ export type Product = {
   id?: number;
   name: string;
   price: number;
+  sales?: number;
   category_id: number;
 };
 
@@ -47,7 +48,7 @@ export class ProductStore {
 
   async delete(id: number): Promise<Product> {
     try {
-      const sql = '';
+      const sql = 'DELETE FROM products WHERE id=($1)';
       const conn = await client.connect();
       const product = await conn.query(sql, [id]);
       conn.release();
