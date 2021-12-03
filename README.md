@@ -20,7 +20,8 @@ Unit Tests using Jasmine
 `ENV=dev`
 
 3. Make sure `dev` and `test` postgres dbs exist in your installation of PostgreSQL and your db username and password match in the `.env` file above.
-4. Simply run `yarn watch` or alternatively\
+4. The api runs on port `3000` while the database runs on the default postgres port `5432`
+5. Simply run `yarn watch` or alternatively\
    `yarn build` followed by `yarn start`\
    to run the server
 
