@@ -3,7 +3,7 @@ import client from '../database';
 export type Order = {
   id?: number;
   user_id: number;
-  order_complete: boolean;
+  order_complete?: boolean;
 };
 
 export type OrderItem = {
@@ -27,15 +27,15 @@ export class OrderStore {
     }
   }
 
-  async show(id: number): Promise<Order> {
+  async show(userId: number): Promise<Order> {
     try {
-      const sql = 'SELECT * FROM orders WHERE id=($1)';
+      const sql = 'SELECT * FROM orders WHERE user_id=($1)';
       const conn = await client.connect();
-      const result = await conn.query(sql, [id]);
+      const result = await conn.query(sql, [userId]);
       conn.release();
       return result.rows[0];
     } catch (err) {
-      throw new Error(`Cannot retrieve order with id: ${id}.\n${err}`);
+      throw new Error(`Cannot retrieve order with id: ${userId}.\n${err}`);
     }
   }
 
@@ -94,6 +94,31 @@ export class OrderStore {
       return result.rows[0];
     } catch (err) {
       throw new Error(`Cannot add item for orderId: ${oI.order_id}\n${err}`);
+    }
+  }
+
+  async checkOrderStatus(orderId: number): Promise<boolean> {
+    try {
+      const sql = 'SELECT order_complete FROM orders WHERE id=($1)';
+      const conn = await client.connect();
+      const result = await conn.query(sql, [orderId]);
+      conn.release();
+      return result.rows[0].order_complete;
+    } catch (err) {
+      throw new Error(`Cannot check order status.\n${err}`);
+    }
+  }
+
+  async completeOrder(orderId: number): Promise<Order> {
+    try {
+      const sql =
+        'UPDATE orders SET order_complete=($1) WHERE id=($2) RETURNING *';
+      const conn = await client.connect();
+      const result = await conn.query(sql, [true, orderId]);
+      conn.release();
+      return result.rows[0];
+    } catch (err) {
+      throw new Error(`${err}`);
     }
   }
 }

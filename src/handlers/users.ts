@@ -12,7 +12,7 @@ const index = async (_req: Request, res: Response) => {
 };
 
 const show = async (req: Request, res: Response) => {
-  const id = parseInt(req.params.id as string);
+  const id = parseInt(req.params.id);
   const user = await store.show(id);
   if (user === undefined) {
     res.json(`Cannot find user with id: ${id}`);
@@ -30,13 +30,13 @@ const create = async (req: Request, res: Response) => {
     const lastName = req.body.lastName as string;
     const password = req.body.password as string;
     const user: User = {
-      firstName,
-      lastName,
+      first_name: firstName,
+      last_name: lastName,
       password
     };
     const newUser = await store.create(user);
-    const token = jwt.sign({ user: newUser }, process.env.TOKEN_SECRET!);
-    res.json(token);
+    const token = jwt.sign({ user: newUser }, process.env.BCRYPT_PASSWORD!);
+    res.json({ access_token: token });
   } catch (err) {
     res.status(400).json(err);
   }
@@ -47,7 +47,7 @@ const authenticate = async (req: Request, res: Response) => {
     const firstName = req.body.firstName as string;
     const password = req.body.password as string;
     const u = await store.authenticate(firstName, password);
-    const token = jwt.sign({ user: u }, process.env.TOKEN_SECRET!);
+    const token = jwt.sign({ user: u }, process.env.BCRYPT_PASSWORD!);
     res.json({ access_token: token });
   } catch (err) {
     res.status(401).json({ err });
@@ -60,22 +60,20 @@ export const verifyAuthToken = (
   next: express.NextFunction
 ) => {
   try {
-    const id = parseInt(req.params.id as string);
     const authorizationHeader = req.headers.authorization;
     const token = authorizationHeader!.split(' ')[1];
-    const decoded = jwt.verify(token, process.env.TOKEN_SECRET!) as JwtPayload;
-    if (decoded.id !== id) {
-      throw new Error('User id does not match');
-    }
+    const decoded = jwt.verify(
+      token,
+      process.env.BCRYPT_PASSWORD!
+    ) as JwtPayload;
     next();
   } catch (err) {
-    console.log(err);
     res.status(401);
     res.json(err);
   }
 };
 
-const user_routes = (app: express.Application) => {
+const userRoutes = (app: express.Application) => {
   app.get('/users', verifyAuthToken, index); // available for admin users only
   app.get('/users/:id', verifyAuthToken, show);
   app.post(
@@ -88,4 +86,4 @@ const user_routes = (app: express.Application) => {
   app.post('/users/authenticate', authenticate);
 };
 
-export default user_routes;
+export default userRoutes;

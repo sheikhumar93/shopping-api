@@ -11,8 +11,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - Index '/products' [GET]
 - Show '/products/:id' [GET]
 - Create [token required] '/products' [POST]
-- [OPTIONAL] Top 5 most popular products '/products?limit=5&sort=-sales' [GET]
-- [OPTIONAL] Products by category (args: product category) '/products?category="category_name"' [GET]
+- [OPTIONAL] Top 5 most popular products
+- [OPTIONAL] Products by category (args: product category)
 
 Products (id: number, name: varchar, price: number, sales: number, category_id: number[foreign key to categories table])
 
@@ -28,7 +28,7 @@ Users (id: number, first_name: varchar, last_name: varchar, password_digest: var
 
 #### Orders
 
-- Current Order by user (args: user id)[token required]
+- Current Order by user (args: user id)[token required] '/orders/:userId' [GET]
 - [OPTIONAL] Completed Orders by user (args: user id)[token required]
 
 Orders (id: number, user_id: number[foreign key to users table], order_complete: boolean)
@@ -58,9 +58,3 @@ Order_Items(id: number, order_id: number[foreign key to orders table], product_i
 - quantity of each product in the order
 - user_id
 - status of order (active or complete)
-
-## Relationships
-
-1. Products and Categories have a one to many relationship - each product can have multiple categories
-2. Products and Orders have a many to many relationship - multiple orders can have the same multiple products
-3. Users and Orders have a one to many relationship - one user can have multiple orders

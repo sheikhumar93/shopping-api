@@ -31,15 +31,14 @@ const create = async (req: Request, res: Response) => {
     const newProduct = await store.create(product);
     res.json(newProduct);
   } catch (err) {
-    console.log(`2che ${err}`);
-    res.json(err);
+    res.status(400).json(err);
   }
 };
 
-const product_routes = (app: express.Application) => {
+const productRoutes = (app: express.Application) => {
   app.get('/products', index);
   app.get('/products/:id', show);
   app.post('/products', verifyAuthToken, create);
 };
 
-export default product_routes;
+export default productRoutes;

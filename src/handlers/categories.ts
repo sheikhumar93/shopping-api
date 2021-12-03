@@ -39,11 +39,11 @@ const destroy = async (req: Request, res: Response) => {
   res.json(deleted);
 };
 
-const category_routes = (app: express.Application) => {
+const categoryRoutes = (app: express.Application) => {
   app.get('/categories', index);
   app.get('/categories/:id', show);
   app.post('/categories', create);
   app.delete('/categories/:id', destroy);
 };
 
-export default category_routes;
+export default categoryRoutes;
