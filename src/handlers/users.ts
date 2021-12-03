@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import jwt, { decode, JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 import { User, UserStore } from '../models/user';
 
@@ -62,10 +62,8 @@ export const verifyAuthToken = (
   try {
     const authorizationHeader = req.headers.authorization;
     const token = authorizationHeader!.split(' ')[1];
-    const decoded = jwt.verify(
-      token,
-      process.env.BCRYPT_PASSWORD!
-    ) as JwtPayload;
+    // eslint-disable-next-line no-unused-vars
+    const _ = jwt.verify(token, process.env.BCRYPT_PASSWORD!) as JwtPayload;
     next();
   } catch (err) {
     res.status(401);

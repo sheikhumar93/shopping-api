@@ -21,6 +21,7 @@ userRoutes(app);
 orderRoutes(app);
 
 app.listen(3000, function () {
+  // eslint-disable-next-line no-console
   console.log(`starting app on: ${address}`);
 });
 

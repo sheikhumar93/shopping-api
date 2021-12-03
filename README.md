@@ -21,7 +21,7 @@ Unit Tests using Jasmine
 
 3. Make sure `dev` and `test` postgres dbs exist in your installation of PostgreSQL and your db username and password match in the `.env` file above.
 4. Simply run `yarn watch` or alternatively\
-   `yarn build` followed by `yarn run`\
+   `yarn build` followed by `yarn start`\
    to run the server
 
 ## Running tests
